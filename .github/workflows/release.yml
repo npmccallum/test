@@ -37,6 +37,6 @@ jobs:
         gh release create latest \
           --title "Latest Build" \
           --latest \
-          file1.bin file2.bin
+          *.bin
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
