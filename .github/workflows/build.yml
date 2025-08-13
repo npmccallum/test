@@ -19,13 +19,12 @@ jobs:
         dd if=/dev/urandom of=file1.bin bs=256 count=1
         dd if=/dev/urandom of=file2.bin bs=512 count=1
         dd if=/dev/urandom of=file3.bin bs=1024 count=1
+        dd if=/dev/urandom of=file4.bin bs=2048 count=1
         
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: build-artifacts
         path: |
-          file1.bin
-          file2.bin
-          file3.bin
+          *.bin
         retention-days: 30
