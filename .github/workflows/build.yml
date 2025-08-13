@@ -16,8 +16,6 @@ jobs:
     - name: Install mkosi and dependencies
       run: |
         # mkosi should already be available on GitHub Actions runners
-        # If not, install it via pip
-        pip3 install --user mkosi
 
     - name: Build UKI with mkosi
       run: |
