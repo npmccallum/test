@@ -15,7 +15,8 @@ jobs:
     
     - name: Install mkosi and dependencies
       run: |
-        # mkosi should already be available on GitHub Actions runners
+        sudo apt-get update
+        sudo apt-get install -y mkosi
 
     - name: Build UKI with mkosi
       run: |
