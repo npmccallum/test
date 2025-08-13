@@ -1,0 +1,29 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Generate random artifacts
+      run: |
+        # Generate two files with random bytes
+        dd if=/dev/urandom of=file1.bin bs=256 count=1
+        dd if=/dev/urandom of=file2.bin bs=512 count=1
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: |
+          file1.bin
+          file2.bin
+        retention-days: 30

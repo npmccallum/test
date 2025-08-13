@@ -1,0 +1,42 @@
+name: release
+
+on:
+  workflow_run:
+    workflows: ["build"]
+    types:
+      - completed
+    branches: [ main ]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    permissions:
+      contents: write
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        run-id: ${{ github.event.workflow_run.id }}
+        
+    - name: Delete existing latest release
+      run: |
+        gh release delete latest --cleanup-tag --yes || true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Create new latest release
+      run: |
+        # Create a new latest release
+        gh release create latest \
+          --title "Latest Build" \
+          --latest \
+          file1.bin file2.bin
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
