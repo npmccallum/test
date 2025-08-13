@@ -37,6 +37,6 @@ jobs:
         gh release create latest \
           --title "Latest Build" \
           --latest \
-          *.bin
+          *.efi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
