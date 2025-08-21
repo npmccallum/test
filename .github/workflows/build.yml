@@ -9,10 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Install mkosi and dependencies
       run: |
         sudo sed -i 's/noble/plucky/g' /etc/apt/sources.list.d/ubuntu.sources
@@ -22,10 +22,20 @@ jobs:
     - name: Build UKI with mkosi
       run: |
         sudo mkosi build --force
-        
+        cp test.efi debian-sid.efi
+        cp test.efi debian-trixie.efi
+        cp test.efi ubuntu-25.10.efi
+        cp test.efi ubuntu-25.04.efi
+        cp test.efi ubuntu-24.10.efi
+        cp test.efi ubuntu-24.04.efi
+        cp test.efi fedora-42.efi
+        cp test.efi fedora-41.efi
+        cp test.efi fedora-40.efi
+        rm test.efi
+
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: build-artifacts
-        path: test.efi
+        path: ./*.efi
         retention-days: 30
