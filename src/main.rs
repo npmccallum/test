@@ -9,5 +9,5 @@ use uefi::runtime::{reset, ResetType};
 
 #[entry]
 fn main() -> Status {
-    reset(ResetType::SHUTDOWN, Status::SUCCESS, None)
+    reset(ResetType::COLD, Status::SUCCESS, None)
 }
