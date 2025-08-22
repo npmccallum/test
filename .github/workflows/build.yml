@@ -13,25 +13,25 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install mkosi and dependencies
-      run: |
-        sudo sed -i 's/noble/plucky/g' /etc/apt/sources.list.d/ubuntu.sources
-        sudo apt update
-        sudo apt install -y mkosi
+    - name: Setup Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        target: x86_64-unknown-uefi
+        override: true
 
-    - name: Build UKI with mkosi
+    - name: Build UEFI binary
       run: |
-        sudo mkosi build --force
-        cp test.efi debian-sid.efi
-        cp test.efi debian-trixie.efi
-        cp test.efi ubuntu-25.10.efi
-        cp test.efi ubuntu-25.04.efi
-        cp test.efi ubuntu-24.10.efi
-        cp test.efi ubuntu-24.04.efi
-        cp test.efi fedora-42.efi
-        cp test.efi fedora-41.efi
-        cp test.efi fedora-40.efi
-        rm test.efi
+        cargo build --release --target x86_64-unknown-uefi
+        cp ./target/x86_64-unknown-uefi/release/poweroff.efi debian-sid.efi
+        cp ./target/x86_64-unknown-uefi/release/poweroff.efi debian-trixie.efi
+        cp ./target/x86_64-unknown-uefi/release/poweroff.efi ubuntu-25.10.efi
+        cp ./target/x86_64-unknown-uefi/release/poweroff.efi ubuntu-25.04.efi
+        cp ./target/x86_64-unknown-uefi/release/poweroff.efi ubuntu-24.10.efi
+        cp ./target/x86_64-unknown-uefi/release/poweroff.efi ubuntu-24.04.efi
+        cp ./target/x86_64-unknown-uefi/release/poweroff.efi fedora-42.efi
+        cp ./target/x86_64-unknown-uefi/release/poweroff.efi fedora-41.efi
+        cp ./target/x86_64-unknown-uefi/release/poweroff.efi fedora-40.efi
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
