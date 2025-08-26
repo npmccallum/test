@@ -25,18 +25,9 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         run-id: ${{ github.event.workflow_run.id }}
         
-    - name: Delete existing latest release
+    - name: Update latest
       run: |
         gh release delete latest --cleanup-tag --yes || true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Create new latest release
-      run: |
-        # Create a new latest release
-        gh release create latest \
-          --title "Latest Build" \
-          --latest \
-          *.efi
+        gh release create latest --title "Latest Build" --latest *.efi
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
