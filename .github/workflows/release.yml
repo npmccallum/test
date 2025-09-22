@@ -25,9 +25,30 @@ jobs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         run-id: ${{ github.event.workflow_run.id }}
         
-    - name: Update latest
+    - name: Delete existing latest release
       run: |
         gh release delete latest --cleanup-tag --yes || true
-        gh release create latest --title "Latest Build" --latest *.efi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create latest release
+      run: |
+        gh release create latest --title "Latest Build" --latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload EFI files with custom MIME type
+      run: |
+        RELEASE_ID=$(gh api repos/$GITHUB_REPOSITORY/releases/tags/latest --jq .id)
+        for efi_file in *.efi; do
+          if [ -f "$efi_file" ]; then
+            echo "Uploading $efi_file with custom MIME type..."
+            curl -X POST \
+              -H "Authorization: Bearer $GITHUB_TOKEN" \
+              -H "Content-Type: application/vnd.dispatch+efi" \
+              --data-binary @"$efi_file" \
+              "https://uploads.github.com/repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID/assets?name=$efi_file"
+          fi
+        done
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
